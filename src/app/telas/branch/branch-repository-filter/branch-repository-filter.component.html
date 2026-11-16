@@ -1,0 +1,52 @@
+<section class="filter-panel repo-filter">
+  @if (!tipo) {
+    <div class="filter-panel__field">
+      <label class="filter-panel__label" [for]="idPrefix + '-tipo'">{{ 'iclass.generic.label.repository-type' | translate }}</label>
+      <div class="filter-panel__control">
+        <p-multiSelect
+          [options]="tipos()"
+          optionLabel="label"
+          optionValue="value"
+          [ngModel]="filter.tipos"
+          (ngModelChange)="setTipos($event)"
+          [inputId]="idPrefix + '-tipo'"
+          [placeholder]="'portal.technical.sheet.label.all' | translate"
+          [showHeader]="false"
+          appendTo="body"
+          styleClass="filter-panel__multi"
+          panelStyleClass="filter-panel__multi-panel"
+        />
+      </div>
+    </div>
+  }
+
+  <!-- grade de 4 colunas em fluxo normal; campos desabilitados quando o Tipo repositório exclui o tipo -->
+  <!-- os dois campos de cada tipo vêm de REPOSITORY_FIELDS (ex.: Descrição/Credenciada da oficina) -->
+  @for (g of grupos; track g.tipo) {
+    @for (f of g.campos; track f.campo) {
+      <div class="filter-panel__field" [class.filter-panel__field--disabled]="!habilitado(g.tipo)">
+        <label class="filter-panel__label" [for]="idPrefix + '-' + g.tipo + '-' + f.campo">{{ f.filtro | translate }}</label>
+        <div class="filter-panel__control">
+          <p-dropdown
+            [options]="operadores()"
+            [ngModel]="filter.campos[g.tipo][f.campo].operador"
+            (ngModelChange)="update(g.tipo, f.campo, { operador: $event })"
+            [disabled]="!habilitado(g.tipo)"
+            [placeholder]="'iclass.generic.label.select-operator' | translate"
+            appendTo="body"
+            styleClass="filter-panel__operator"
+            panelStyleClass="filter-panel__operator-panel"
+          />
+          <input
+            [id]="idPrefix + '-' + g.tipo + '-' + f.campo"
+            pInputText
+            class="filter-panel__input"
+            [ngModel]="filter.campos[g.tipo][f.campo].valor"
+            (ngModelChange)="update(g.tipo, f.campo, { valor: $event })"
+            [disabled]="!habilitado(g.tipo)"
+          />
+        </div>
+      </div>
+    }
+  }
+</section>

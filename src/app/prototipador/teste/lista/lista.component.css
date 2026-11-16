@@ -1,0 +1,144 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px 8px 16px 12px;
+  font-size: 0.8125rem;
+}
+
+.proto-lista__cabecalho {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.proto-lista__fechar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: none;
+  border-radius: 6px;
+  background: none;
+  color: var(--text-color-secondary);
+  cursor: pointer;
+}
+
+.proto-lista__fechar:hover {
+  background: rgba(0, 0, 0, 0.04);
+  color: var(--text-color);
+}
+
+.proto-lista__titulo {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-color-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.proto-lista__avisos {
+  padding: 6px 8px;
+  border-radius: 6px;
+  background: #fff7ed;
+  color: #9a3412;
+  font-size: 0.75rem;
+}
+
+.proto-lista__vazio {
+  margin: 0;
+  color: var(--text-color-secondary);
+}
+
+/* ---------- Árvore ---------- */
+
+.proto-arvore,
+.proto-arvore__filhos {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Cada nível recua e ganha uma guia vertical, para ver quem é filho de quem. */
+.proto-arvore__filhos {
+  margin-left: 8px;
+  padding-left: 4px;
+  border-left: 1px solid #e4e6ea;
+}
+
+.proto-arvore__linha {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  border-radius: 6px;
+}
+
+.proto-arvore__linha:hover {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.proto-arvore__linha--ativa,
+.proto-arvore__linha--ativa:hover {
+  background: rgba(0, 0, 0, 0.06);
+}
+
+.proto-arvore__alternar,
+.proto-arvore__folha {
+  flex: 0 0 18px;
+  height: 18px;
+}
+
+.proto-arvore__alternar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: none;
+  border-radius: 4px;
+  background: none;
+  color: var(--text-color-secondary);
+  cursor: pointer;
+}
+
+.proto-arvore__alternar .pi {
+  font-size: 0.625rem;
+}
+
+.proto-arvore__item {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  padding: 5px 6px 5px 2px;
+  border: none;
+  background: none;
+  color: var(--text-color);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.proto-arvore__linha--ativa .proto-arvore__item {
+  color: var(--primary-color);
+}
+
+.proto-arvore__id {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.proto-arvore__alerta {
+  color: var(--orange-500);
+  font-size: 0.75rem;
+}
+
+.proto-arvore__ciclo {
+  color: var(--text-color-secondary);
+  font-size: 0.6875rem;
+}

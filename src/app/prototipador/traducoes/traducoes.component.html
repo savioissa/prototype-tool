@@ -1,0 +1,183 @@
+<header class="proto-traducoes__cabecalho">
+  <div>
+    <h1 class="proto-traducoes__titulo">Traduções</h1>
+    <p class="proto-traducoes__resumo">
+      {{ resumo().total }} tags · {{ resumo().novas }} novas · {{ resumo().existentes }} existentes
+    </p>
+  </div>
+  <div class="proto-traducoes__filtros">
+    <p-selectButton
+      styleClass="proto-traducoes__alternador"
+      [options]="escopos"
+      optionLabel="rotulo"
+      optionValue="valor"
+      [allowEmpty]="false"
+      [disabled]="semTelaAtual()"
+      [ngModel]="semTelaAtual() ? 'todas' : escopo()"
+      (ngModelChange)="escopo.set($event)"
+    />
+    <span class="proto-traducoes__busca">
+      <i class="pi pi-search"></i>
+      <input
+        pInputText
+        type="search"
+        placeholder="Buscar por chave ou texto"
+        aria-label="Buscar por chave ou texto"
+        [ngModel]="busca()"
+        (ngModelChange)="busca.set($event)"
+      />
+    </span>
+    <p-selectButton
+      styleClass="proto-traducoes__alternador"
+      [options]="status"
+      optionLabel="rotulo"
+      optionValue="valor"
+      [allowEmpty]="false"
+      [ngModel]="filtroDeStatus()"
+      (ngModelChange)="filtroDeStatus.set($event)"
+    />
+  </div>
+</header>
+
+@if (!dados.planilhaDisponivel) {
+  <p class="proto-traducoes__alerta">
+    <i class="pi pi-info-circle"></i>
+    Sem planilha: não dá para saber quais tags já existem.
+    @for (aviso of dados.avisos; track aviso) {
+      @if (aviso.includes('lanilha') || aviso.includes('colunaChave')) {
+        <span>{{ aviso }}</span>
+      }
+    }
+  </p>
+}
+
+@if (dados.avisos.length) {
+  <section class="proto-traducoes__avisos">
+    <button type="button" class="proto-traducoes__avisos-titulo" (click)="avisosAbertos.set(!avisosAbertos())" [attr.aria-expanded]="avisosAbertos()">
+      <i class="pi" [class.pi-chevron-down]="avisosAbertos()" [class.pi-chevron-right]="!avisosAbertos()"></i>
+      Avisos ({{ dados.avisos.length }})
+    </button>
+    @if (avisosAbertos()) {
+      <ul class="proto-traducoes__avisos-lista">
+        @for (aviso of dados.avisos; track aviso) {
+          <li>{{ aviso }}</li>
+        }
+      </ul>
+    }
+  </section>
+}
+
+<div class="proto-traducoes__corpo">
+  @if (resumo().total === 0) {
+    <div class="proto-traducoes__estado">
+      <i class="pi pi-language"></i>
+      <p>Nenhuma tag de tradução encontrada nesta tela.</p>
+      @if (escopo() === 'tela' && !semTelaAtual() && dados.tags.length) {
+        <button type="button" class="proto-traducoes__acao" (click)="escopo.set('todas')">Ver todas as tags</button>
+      }
+    </div>
+  } @else if (linhas().length === 0) {
+    <div class="proto-traducoes__estado">
+      <i class="pi pi-search"></i>
+      <p>Nenhuma tag corresponde à busca.</p>
+    </div>
+  } @else {
+    <table class="proto-traducoes__tabela">
+      <colgroup>
+        <col class="proto-traducoes__col-chave" />
+        <col class="proto-traducoes__col-texto" />
+        <col class="proto-traducoes__col-texto" />
+        <col class="proto-traducoes__col-texto" />
+        <col class="proto-traducoes__col-status" />
+        <col class="proto-traducoes__col-componente" />
+        <col />
+      </colgroup>
+      <thead>
+        <tr>
+          @for (coluna of [
+            { id: 'chave', rotulo: 'Chave' },
+            { id: 'pt', rotulo: 'PT' },
+            { id: 'en', rotulo: 'EN' },
+            { id: 'es', rotulo: 'ES' },
+            { id: 'status', rotulo: 'Status' },
+            { id: 'componente', rotulo: 'Componente' },
+            { id: 'contexto', rotulo: 'Contexto' }
+          ]; track coluna.id) {
+            <th scope="col" [attr.aria-sort]="setaDe($any(coluna.id)) ? (ordem().crescente ? 'ascending' : 'descending') : null">
+              <button type="button" class="proto-traducoes__ordenar" (click)="ordenar($any(coluna.id))">
+                {{ coluna.rotulo }}
+                @if (setaDe($any(coluna.id)); as seta) {
+                  <i class="pi" [class]="'pi ' + seta"></i>
+                }
+              </button>
+            </th>
+          }
+        </tr>
+      </thead>
+      <tbody>
+        @for (linha of linhas(); track linha.tag.chave) {
+          <tr class="proto-traducoes__linha">
+            <td class="proto-traducoes__chave">
+              <code>{{ linha.tag.chave }}</code>
+              <button
+                type="button"
+                class="proto-traducoes__copiar"
+                (click)="copiar(linha.tag.chave)"
+                [attr.aria-label]="'Copiar ' + linha.tag.chave"
+              >
+                <i class="pi" [class.pi-copy]="copiada() !== linha.tag.chave" [class.pi-check]="copiada() === linha.tag.chave"></i>
+              </button>
+            </td>
+            <td>{{ linha.tag.textos.pt ?? '—' }}</td>
+            <td>{{ linha.tag.textos.en ?? '—' }}</td>
+            <td>{{ linha.tag.textos.es ?? '—' }}</td>
+            <td>
+              <span
+                class="proto-traducoes__status"
+                [class.proto-traducoes__status--nova]="linha.tag.naPlanilha === false"
+                [class.proto-traducoes__status--existente]="linha.tag.naPlanilha === true"
+              >{{ rotuloDoStatus(linha.tag) }}</span>
+            </td>
+            <td class="proto-traducoes__componente">
+              <span>{{ linha.usos[0].componente || linha.usos[0].arquivo }}</span>
+              @if (linha.usos.length > 1) {
+                <button
+                  type="button"
+                  class="proto-traducoes__mais"
+                  (click)="alternar(linha.tag.chave)"
+                  [attr.aria-expanded]="abertas().has(linha.tag.chave)"
+                  [attr.aria-label]="(abertas().has(linha.tag.chave) ? 'Esconder' : 'Mostrar') + ' todos os usos'"
+                >+{{ linha.usos.length - 1 }}</button>
+              }
+            </td>
+            <td class="proto-traducoes__contexto">
+              <ng-container *ngTemplateOutlet="contexto; context: { $implicit: linha.usos[0] }" />
+            </td>
+          </tr>
+          @if (abertas().has(linha.tag.chave)) {
+            @for (uso of linha.usos; track $index) {
+              <tr class="proto-traducoes__uso">
+                <td colspan="5" class="proto-traducoes__uso-rotulo">uso {{ $index + 1 }} de {{ linha.usos.length }}</td>
+                <td class="proto-traducoes__componente">{{ uso.componente || uso.arquivo }}</td>
+                <td class="proto-traducoes__contexto">
+                  <ng-container *ngTemplateOutlet="contexto; context: { $implicit: uso }" />
+                </td>
+              </tr>
+            }
+          }
+        }
+      </tbody>
+    </table>
+  }
+</div>
+
+<ng-template #contexto let-uso>
+  <div class="proto-traducoes__contexto-conteudo">
+  <span class="proto-traducoes__papel" [class.proto-traducoes__papel--provavel]="uso.provavel">{{ uso.papel }}</span>
+  @if (uso.condicao) {
+    <span class="proto-traducoes__condicao">{{ uso.condicao }}</span>
+  }
+  <code class="proto-traducoes__trecho">{{ uso.trecho }}</code>
+  <span class="proto-traducoes__local">{{ uso.arquivo }}:{{ uso.linha }}</span>
+  </div>
+</ng-template>

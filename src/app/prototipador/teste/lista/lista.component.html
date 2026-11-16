@@ -1,0 +1,69 @@
+<header class="proto-lista__cabecalho">
+  <span class="proto-lista__titulo">Componentes</span>
+  <button type="button" class="proto-lista__fechar" (click)="fechar.emit()" aria-label="Fechar árvore de componentes">
+    <i class="pi pi-times"></i>
+  </button>
+</header>
+
+@if (estado.avisosGerais.length) {
+  <div class="proto-lista__avisos">
+    <i class="pi pi-exclamation-triangle"></i> {{ estado.avisosGerais.length }} arquivo(s) não lido(s)
+  </div>
+}
+
+<nav aria-label="Árvore de componentes">
+  @if (raizes().length) {
+    <ul class="proto-arvore" role="tree">
+      @for (no of raizes(); track no.chave) {
+        <ng-container *ngTemplateOutlet="ramo; context: { $implicit: no }" />
+      }
+    </ul>
+  } @else {
+    <p class="proto-lista__vazio">Nenhum componente encontrado na pasta das telas.</p>
+  }
+</nav>
+
+<ng-template #ramo let-no>
+  <li class="proto-arvore__no" role="treeitem" [attr.aria-expanded]="no.filhos.length ? !recolhidos().has(no.chave) : null">
+    <div class="proto-arvore__linha" [class.proto-arvore__linha--ativa]="estado.selecionado()?.id === no.componente.id">
+      @if (no.filhos.length) {
+        <button
+          type="button"
+          class="proto-arvore__alternar"
+          (click)="alternar(no.chave)"
+          [attr.aria-label]="recolhidos().has(no.chave) ? 'Mostrar filhos' : 'Esconder filhos'"
+        >
+          <i class="pi" [class.pi-chevron-down]="!recolhidos().has(no.chave)" [class.pi-chevron-right]="recolhidos().has(no.chave)"></i>
+        </button>
+      } @else {
+        <span class="proto-arvore__folha" aria-hidden="true"></span>
+      }
+      <button
+        type="button"
+        class="proto-arvore__item"
+        [attr.aria-current]="estado.selecionado()?.id === no.componente.id ? 'true' : null"
+        (click)="escolherComponente(no.componente.id)"
+      >
+        <span class="proto-arvore__id">{{ no.componente.id }}</span>
+        @if (no.ciclo) {
+          <i class="pi pi-replay proto-arvore__ciclo" aria-label="Usa a si mesmo no template"></i>
+        }
+        @if (estado.avisos().get(no.componente.id); as avisos) {
+          @if (avisos.length) {
+            <i
+              class="pi pi-exclamation-triangle proto-arvore__alerta"
+              [attr.aria-label]="avisos.length + ' aviso(s)'"
+            ></i>
+          }
+        }
+      </button>
+    </div>
+    @if (no.filhos.length && !recolhidos().has(no.chave)) {
+      <ul class="proto-arvore__filhos" role="group">
+        @for (filho of no.filhos; track filho.chave) {
+          <ng-container *ngTemplateOutlet="ramo; context: { $implicit: filho }" />
+        }
+      </ul>
+    }
+  </li>
+</ng-template>

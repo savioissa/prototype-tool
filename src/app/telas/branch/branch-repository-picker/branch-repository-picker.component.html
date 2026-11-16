@@ -1,0 +1,127 @@
+<section class="pick-field">
+  <header class="pick-field__header">
+    <h3 class="t-label-field pick-field__label">
+      {{ 'iclass.generic.label.repository' | translate }} <span class="pick-field__required" aria-hidden="true">*</span>
+    </h3>
+    @if (aberto) {
+      <!-- logo à direita do rótulo: o tipo define quais repositórios a vinculação lista -->
+      <div class="pick-field__type">
+        <span class="pick-field__type-divider" aria-hidden="true"></span>
+        <label class="pick-field__type-label" for="repository-picker-type">{{ 'iclass.generic.label.repository-type' | translate }}</label>
+        <p-dropdown
+          [options]="tipos()"
+          optionLabel="label"
+          optionValue="value"
+          [ngModel]="tipo"
+          (ngModelChange)="onTipoChange($event)"
+          inputId="repository-picker-type"
+          appendTo="body"
+          styleClass="pick-field__type-select"
+        />
+      </div>
+    } @else if (selected) {
+      <div class="pick-section__tools">
+        <p-button [label]="'portal.generic.button.change' | translate" [text]="true" styleClass="btn--md pick-field__action" (onClick)="abrirVinculacao()" />
+        <p-button [label]="'iclass.generic.button.remove' | translate" [text]="true" styleClass="btn--md btn--danger btn--text pick-field__action" (onClick)="escolher(null)" />
+      </div>
+    }
+  </header>
+
+  @if (aberto) {
+    <div class="pick-section">
+      <header class="pick-section__header">
+        <h4 class="pick-section__title">{{ 'iclass.generic.label.select-repository' | translate }}</h4>
+
+        <div class="pick-section__tools">
+          <p-button
+            [class.is-active]="showFilter"
+            icon="pi pi-filter"
+            styleClass="btn--md btn--neutral"
+            (onClick)="showFilter = !showFilter"
+          />
+          <p-button
+            icon="pi pi-refresh"
+            styleClass="btn--md btn--neutral"
+            [disabled]="status === 'loading'"
+            (onClick)="carregar()"
+          />
+        </div>
+      </header>
+
+      @if (showFilter) {
+        <app-branch-repository-filter
+          idPrefix="repository-picker-filter"
+          [tipo]="tipo"
+          [filter]="filtro"
+          (filterChange)="onFilterChange($event)"
+        />
+      }
+
+      @switch (status) {
+        @case ('loading') {
+          <div class="list-stack" aria-busy="true">
+            @for (s of skeletons; track $index) {
+              <app-branch-repository-card [loading]="true" />
+            }
+          </div>
+        }
+
+        @case ('error') {
+          <div class="load-state load-state--error">
+            <i class="pi pi-exclamation-circle"></i>
+            <p>{{ 'iclass.generic.label.could-not-load-repositories' | translate }}</p>
+            <p-button [label]="'portal.generic.button.try-again' | translate" icon="pi pi-refresh" styleClass="btn--md btn--secondary" (onClick)="carregar()" />
+          </div>
+        }
+
+        @default {
+          @if (resultado.length) {
+            <div class="list-stack">
+              @for (repository of pagina; track key(repository)) {
+                <app-branch-repository-card
+                  [repository]="repository"
+                  [pickable]="true"
+                  (pick)="escolher($event)"
+                  (open)="abrir($event)"
+                />
+              }
+            </div>
+          } @else if (repositorios.length && filtroAtivo) {
+            <div class="load-state">
+              <i class="pi pi-search"></i>
+              <p>{{ 'portal.generic.results-not-found' | translate }}</p>
+            </div>
+          } @else {
+            <div class="load-state">
+              <i class="pi pi-folder-open"></i>
+              <p>{{ 'iclass.generic.label.no-repository-of-type-registered' | translate }}</p>
+            </div>
+          }
+        }
+      }
+
+      <!-- Fechar à esquerda, na mesma linha do paginador -->
+      <footer class="pick-section__footer">
+        <p-button [label]="'portal.generic.button.close' | translate" styleClass="btn--md btn--neutral" (onClick)="fechar()" />
+        @if (status === 'ready' && resultado.length > rows) {
+          <p-paginator
+            [first]="first"
+            [rows]="rows"
+            [totalRecords]="resultado.length"
+            [pageLinkSize]="5"
+            styleClass="paginator--md"
+            (onPageChange)="onPage($event)"
+          />
+        }
+      </footer>
+    </div>
+  } @else if (selected) {
+    <app-branch-repository-card [repository]="selected" (open)="abrir($event)" />
+  } @else {
+    <!-- área clicável: abre a vinculação no lugar dela -->
+    <button type="button" class="pick-area" (click)="abrirVinculacao()">
+      <i class="pi pi-plus"></i>
+      {{ 'iclass.generic.label.select-repository' | translate }}
+    </button>
+  }
+</section>

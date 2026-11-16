@@ -1,0 +1,189 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+}
+
+.proto-dados__cabecalho {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 24px 12px;
+  border-bottom: 1px solid #e4e6ea;
+}
+
+.proto-dados__titulo {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.proto-dados__resumo {
+  margin: 2px 0 0;
+  color: var(--text-color-secondary);
+  font-size: 0.8125rem;
+}
+
+.proto-dados__zoom {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.proto-dados__botao {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 30px;
+  height: 30px;
+  padding: 0 8px;
+  border: 1px solid #d9dce1;
+  border-radius: 6px;
+  background: #fff;
+  color: var(--text-color);
+  font: inherit;
+  font-size: 0.8125rem;
+  cursor: pointer;
+}
+
+.proto-dados__botao:hover {
+  background: #f1f2f4;
+}
+
+.proto-dados__botao .pi {
+  font-size: 0.75rem;
+}
+
+.proto-dados__porcentagem {
+  min-width: 44px;
+  color: var(--text-color-secondary);
+  font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
+
+.proto-dados__avisos {
+  padding: 8px 24px;
+  border-bottom: 1px solid #e4e6ea;
+  background: #fffbf5;
+  font-size: 0.8125rem;
+}
+
+.proto-dados__avisos-titulo {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0;
+  border: none;
+  background: none;
+  color: #9a3412;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.proto-dados__avisos-titulo .pi {
+  font-size: 0.6875rem;
+}
+
+.proto-dados__avisos-lista {
+  margin: 6px 0 0;
+  padding-left: 18px;
+  color: var(--text-color);
+}
+
+.proto-dados__janela {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  cursor: grab;
+  touch-action: none;
+}
+
+.proto-dados__janela:active {
+  cursor: grabbing;
+}
+
+.proto-dados__desenho {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform-origin: 0 0;
+}
+
+.proto-dados__estado {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 240px;
+  margin: 0;
+  color: var(--text-color-secondary);
+  font-size: 0.875rem;
+  text-align: center;
+}
+
+.proto-dados__estado p {
+  margin: 0;
+}
+
+.proto-dados__estado--sobre {
+  position: absolute;
+  inset: 0;
+}
+
+.proto-dados__dica {
+  max-width: 460px;
+  font-size: 0.8125rem;
+}
+
+.proto-dados__erro {
+  max-width: 560px;
+  margin: 0;
+  padding: 8px 12px;
+  border-radius: 6px;
+  background: #f1f2f4;
+  font-size: 0.75rem;
+  white-space: pre-wrap;
+  text-align: left;
+}
+
+/* Legenda fixa no canto, fora do zoom. */
+.proto-dados__legenda {
+  position: absolute;
+  right: 16px;
+  bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 0;
+  padding: 8px 12px;
+  border: 1px solid #e4e6ea;
+  border-radius: 8px;
+  background: #fff;
+  color: var(--text-color-secondary);
+  font-size: 0.75rem;
+  pointer-events: none;
+}
+
+.proto-dados__legenda > span {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.proto-dados__traco {
+  display: inline-block;
+  width: 28px;
+  border-top: 2px solid var(--text-color-secondary);
+}
+
+.proto-dados__traco--tracejado {
+  border-top-style: dashed;
+}

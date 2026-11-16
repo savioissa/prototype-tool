@@ -1,0 +1,164 @@
+// Campo de escolha (almoxarifado ou repositório) dentro da tela cinza de adicionar repositório: rótulo e,
+// abaixo, a área clicável, a vinculação (azul-clara, como a de almoxarifado) ou o card escolhido.
+:host {
+  display: block;
+}
+
+.pick-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.pick-field__header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 32px;
+}
+
+.pick-field__label {
+  margin: 0;
+  color: #1F2937;
+}
+
+// "Alterar" e "Remover" ao lado do rótulo: menores que o btn--md, na escala do rótulo
+:host ::ng-deep .p-button.btn--md.pick-field__action {
+  height: 28px;
+  padding: 0 10px;
+  font-size: 14px;
+}
+
+.pick-field__required {
+  margin-left: 2px;
+  color: #DC2626;
+}
+
+// área clicável tracejada que abre a vinculação
+.pick-area {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  height: 72px;
+  padding: 0 16px;
+  border: 1px dashed #C9CCDA;
+  border-radius: 8px;
+  background: #F9FAFC;
+  color: #2563EB;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+
+  .pi {
+    font-size: 14px;
+  }
+
+  &:hover {
+    border-color: #93C5FD;
+    background: #F1F6FF;
+  }
+
+  &:focus-visible {
+    outline: 2px solid #60A5FA;
+    outline-offset: 2px;
+  }
+}
+
+.pick-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 12px 16px 16px;
+  background: #F6FAFF;
+  border: 1px solid #C6DFFF;
+  border-radius: 10px;
+}
+
+.pick-section__header {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.pick-section__title {
+  margin: 0;
+  font: var(--label-field);
+  color: #1F2937;
+}
+
+.pick-section__tools {
+  display: flex;
+  gap: 8px;
+  margin-left: auto;
+}
+
+// rodapé da vinculação: "Fechar" à esquerda e o paginador à direita, na mesma linha
+.pick-section__footer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  p-paginator {
+    flex: 1;
+    min-width: 0;
+  }
+}
+
+// aqui o paginador divide a linha com o "Fechar": sem a borda e o respiro que ganha dentro de .insumo-layer
+:host ::ng-deep .pick-section__footer .p-paginator {
+  padding: 0;
+  border: none;
+}
+
+// tipo de repositório logo à direita do rótulo, separado por um traço e na altura do texto
+.pick-field__type {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pick-field__type-divider {
+  width: 1px;
+  height: 16px;
+  margin: 0 4px;
+  background: #D1D5DB;
+}
+
+.pick-field__type-label {
+  font: var(--secondary-md);
+  color: #6B7280;
+  white-space: nowrap;
+}
+
+:host ::ng-deep .pick-field__type-select.p-dropdown {
+  min-width: 140px;
+  height: 28px;
+  align-items: center;
+  border-color: #D9DCE1;
+  border-radius: 6px;
+  background: #FFFFFF;
+
+  &:not(.p-disabled):hover {
+    border-color: #C2C6CE;
+  }
+
+  .p-dropdown-label {
+    padding: 0 10px;
+    font: var(--secondary-md);
+    color: #1F2937;
+  }
+
+  .p-dropdown-trigger {
+    width: 30px;
+    color: #6B7280;
+  }
+
+  .p-dropdown-trigger .p-icon {
+    width: 12px;
+    height: 12px;
+  }
+}

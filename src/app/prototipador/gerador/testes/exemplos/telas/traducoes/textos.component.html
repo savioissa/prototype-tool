@@ -1,0 +1,36 @@
+<h2>{{ 'tela.titulo' | translate }}</h2>
+<p>{{ 'tela.ola' | translate: { nome: usuario } }}</p>
+<button type="button">{{ 'acao.salvar' | translate }}</button>
+<p-button [label]="'acao.cancelar' | translate" />
+<label for="nome">{{ 'campo.nome' | translate }}</label>
+<input id="nome" [placeholder]="'campo.dica' | translate" />
+<a href="#">{{ 'link.ajuda' | translate }}</a>
+<table><tr><th>{{ 'coluna.codigo' | translate }}</th></tr></table>
+<span [title]="'dica.texto' | translate">?</span>
+<p-tabPanel [header]="'aba.geral' | translate"></p-tabPanel>
+<button type="button" [attr.aria-label]="'acao.fechar' | translate">x</button>
+<p-dropdown [emptyMessage]="'lista.semopcoes' | translate" />
+<span translate>diretiva.conteudo</span>
+<span [translate]="'diretiva.vinculada'"></span>
+@if (itens.length === 0) {
+  <p>{{ 'lista.vazia' | translate }}</p>
+} @else {
+  <p>{{ 'lista.cheia' | translate }}</p>
+}
+@for (item of itens; track item) {
+  <span>{{ item }}</span>
+} @empty {
+  <em>{{ 'lista.nada' | translate }}</em>
+}
+@switch (modo) {
+  @case ('a') {
+    <i>{{ 'modo.a' | translate }}</i>
+  }
+  @default {
+    <i>{{ 'modo.outro' | translate }}</i>
+  }
+}
+<div *ngIf="mostrar"><b>{{ 'estrutural.texto' | translate }}</b></div>
+<p>{{ 'status.' + estado | translate }}</p>
+<p>{{ coluna.header | translate }}</p>
+<p>{{ (ativo ? 'estado.ativo' : 'estado.inativo') | translate }}</p>

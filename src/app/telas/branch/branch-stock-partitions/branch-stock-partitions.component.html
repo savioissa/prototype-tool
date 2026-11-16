@@ -1,0 +1,99 @@
+<div class="tab-toolbar">
+  <p-button
+    [class.is-active]="showLink"
+    [label]="'portal.generic.button.link' | translate"
+    icon="pi pi-link"
+    styleClass="btn--md btn--secondary"
+    [disabled]="!branchCode"
+    (onClick)="alternarVincular()"
+  />
+
+  <!-- com a seção de vincular aberta, o resto da toolbar fica desabilitado -->
+  <p-button
+    [class.is-active]="showFilter"
+    icon="pi pi-filter"
+    styleClass="btn--md btn--neutral"
+    [disabled]="showLink"
+    (onClick)="showFilter = !showFilter"
+  />
+
+  <p-button
+    [class.is-active]="showSort"
+    icon="pi pi-sort-amount-down"
+    styleClass="btn--md btn--neutral"
+    [disabled]="showLink"
+    (onClick)="showSort = !showSort"
+  />
+
+  <p-button
+    [label]="'portal.generic.button.refresh' | translate"
+    icon="pi pi-refresh"
+    styleClass="btn--md btn--primary"
+    [disabled]="status === 'loading' || showLink"
+    (onClick)="carregar()"
+  />
+</div>
+
+@if (showLink && branchCode) {
+  <app-branch-stock-partition-link [branchCode]="branchCode" (closed)="showLink = false" (linked)="onLinked()" />
+}
+
+@if (showFilter) {
+  <app-branch-filter [filter]="filtro" (filterChange)="onFilterChange($event)" />
+}
+
+@if (showSort) {
+  <app-branch-sort [sort]="ordenacao" (sortChange)="onSortChange($event)" />
+}
+
+@switch (status) {
+  @case ('loading') {
+    <div class="list-stack" aria-busy="true">
+      @for (s of skeletons; track $index) {
+        <app-branch-stock-partition-card [loading]="true" />
+      }
+    </div>
+  }
+
+  @case ('error') {
+    <div class="load-state load-state--error state-fill">
+      <i class="pi pi-exclamation-circle"></i>
+      <p>{{ 'iclass.generic.label.could-not-load-stock-partitions' | translate }}</p>
+      <p-button [label]="'portal.generic.button.try-again' | translate" icon="pi pi-refresh" styleClass="btn--md btn--secondary" (onClick)="carregar()" />
+    </div>
+  }
+
+  @default {
+    @if (resultado.length) {
+      <div class="list-stack">
+        @for (stockPartition of pagina; track stockPartition.codigo) {
+          <app-branch-stock-partition-card [stockPartition]="stockPartition" [unlinkable]="true" [actionsDisabled]="showLink" (unlink)="desvincular($event)" (open)="abrir($event)" />
+        }
+      </div>
+
+      @if (resultado.length > rows) {
+        <p-paginator
+          [first]="first"
+          [rows]="rows"
+          [totalRecords]="resultado.length"
+          [pageLinkSize]="5"
+          styleClass="paginator--md"
+          (onPageChange)="onPage($event)"
+        />
+      }
+    } @else if (stockPartitions.length && filtroAtivo) {
+      <div class="req-empty state-fill">
+        <i class="pi pi-search"></i>
+        <p>{{ 'portal.generic.results-not-found' | translate }}</p>
+      </div>
+    } @else {
+      <div class="req-empty state-fill">
+        <i class="pi pi-folder-open"></i>
+        <p>{{ 'iclass.generic.label.no-stock-partition-linked' | translate }}</p>
+      </div>
+    }
+  }
+}
+
+<!-- confirmação ao desvincular -->
+<p-confirmDialog styleClass="leave-dialog leave-dialog--titled" [style]="{ width: '420px' }" />

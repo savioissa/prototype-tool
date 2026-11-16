@@ -1,0 +1,138 @@
+<div class="proto-campo" [class.proto-campo--grupo]="tipo.tipo === 'objeto' || tipo.tipo === 'lista'">
+  <div class="proto-campo__cabecalho">
+    @if (tipo.tipo === 'objeto' && !vazio) {
+      <button type="button" class="proto-campo__recolher" (click)="aberto = !aberto" [attr.aria-expanded]="aberto">
+        <i class="pi" [class.pi-chevron-down]="aberto" [class.pi-chevron-right]="!aberto"></i>
+        <span class="proto-campo__nome">{{ definicao.nome }}</span>
+      </button>
+    } @else {
+      <span class="proto-campo__nome">{{ definicao.nome }}</span>
+    }
+    @if (valor === undefined) {
+      <span class="proto-campo__estado">indefinido</span>
+    } @else if (valor === null) {
+      <span class="proto-campo__estado">nulo</span>
+    }
+    @if (marcador) {
+      <span class="proto-campo__marcador">{{ marcador }}</span>
+    }
+
+    <span class="proto-campo__acoes">
+      @if (definicao.opcional && valor !== undefined) {
+        <button type="button" class="proto-campo__acao" (click)="alterar.emit(undefined)">Deixar indefinido</button>
+      }
+      @if (definicao.aceitaNulo && valor !== null) {
+        <button type="button" class="proto-campo__acao" (click)="alterar.emit(null)">Definir como nulo</button>
+      }
+    </span>
+  </div>
+
+  @switch (tipo.tipo) {
+    @case ('texto') {
+      <textarea
+        pInputTextarea
+        class="proto-campo__texto"
+        rows="1"
+        [autoResize]="true"
+        [ngModel]="texto"
+        (ngModelChange)="alterar.emit($event)"
+      ></textarea>
+    }
+    @case ('numero') {
+      <input
+        pInputText
+        type="number"
+        class="proto-campo__numero"
+        [ngModel]="valor"
+        (ngModelChange)="alterarNumero($event)"
+      />
+    }
+    @case ('booleano') {
+      <p-inputSwitch [ngModel]="valor === true" (ngModelChange)="alterar.emit($event)" />
+    }
+    @case ('opcoes') {
+      <p-dropdown
+        styleClass="proto-campo__opcoes"
+        [autoDisplayFirst]="false"
+        appendTo="body"
+        [options]="opcoes"
+        optionLabel="rotulo"
+        optionValue="valor"
+        placeholder="—"
+        [ngModel]="valor"
+        (ngModelChange)="alterar.emit($event)"
+      />
+    }
+    @case ('data') {
+      <p-calendar
+        styleClass="proto-campo__data"
+        appendTo="body"
+        dateFormat="dd/mm/yy"
+        [showIcon]="true"
+        [showTime]="true"
+        [ngModel]="data"
+        (ngModelChange)="alterar.emit($event)"
+      />
+    }
+    @case ('objeto') {
+      @if (vazio) {
+        <button type="button" class="proto-campo__preencher" (click)="preencher()">Preencher</button>
+      } @else if (aberto) {
+        <div class="proto-campo__filhos">
+          @for (campo of campos; track campo.nome) {
+            <proto-campo
+              [definicao]="campo"
+              [valor]="objeto[campo.nome]"
+              [caminho]="caminho + '.' + campo.nome"
+              [limites]="limites"
+              [tipos]="tipos"
+              (alterar)="alterarAtributo(campo, $event)"
+            />
+          }
+        </div>
+      }
+    }
+    @case ('lista') {
+      @if (valor === null) {
+        <button type="button" class="proto-campo__preencher" (click)="preencher()">Preencher</button>
+      } @else {
+        <ol class="proto-campo__itens">
+          @for (item of itens; track $index) {
+            <li class="proto-campo__item">
+              <span class="proto-campo__indice">{{ $index + 1 }}</span>
+              <proto-campo
+                class="proto-campo__item-campo"
+                [definicao]="definicaoDoItem"
+                [valor]="item"
+                [caminho]="caminho + '[]'"
+                [limites]="limites"
+                [tipos]="tipos"
+                (alterar)="alterarItem($index, $event)"
+              />
+              <button type="button" class="proto-campo__remover" (click)="removerItem($index)" aria-label="Remover item">
+                <i class="pi pi-times"></i>
+              </button>
+            </li>
+          }
+        </ol>
+        <button type="button" class="proto-campo__preencher" (click)="adicionarItem()">
+          <i class="pi pi-plus"></i> Adicionar
+        </button>
+      }
+    }
+    @case ('naoEditavel') {
+      <div class="proto-campo__nao-editavel">
+        <code>{{ tipo.textoDoTipo }}</code>
+        @if (vazio) {
+          <span><i class="pi pi-exclamation-triangle"></i> Defina este input no arquivo de ajuste.</span>
+        } @else {
+          <span><i class="pi pi-check-circle"></i> Valor definido pelo estado; não é editável aqui.</span>
+        }
+      </div>
+    }
+  }
+
+  @if (textoDoContador; as texto) {
+    <div class="proto-campo__contador" [class.proto-campo__contador--fora]="foraDoLimite">{{ texto }}</div>
+  }
+</div>

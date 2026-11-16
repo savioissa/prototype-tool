@@ -1,0 +1,106 @@
+<div class="tab-toolbar">
+  <p-button
+    [class.is-active]="showAdd"
+    [label]="'portal.generic.button.add' | translate"
+    icon="pi pi-plus"
+    styleClass="btn--md btn--secondary"
+    [disabled]="!branchCode"
+    (onClick)="alternarAdicionar()"
+  />
+
+  <!-- com a seção de adicionar aberta, o resto da toolbar fica desabilitado -->
+  <p-button
+    [class.is-active]="showFilter"
+    icon="pi pi-filter"
+    styleClass="btn--md btn--neutral"
+    [disabled]="showAdd"
+    (onClick)="showFilter = !showFilter"
+  />
+
+  <p-button
+    [class.is-active]="showSort"
+    icon="pi pi-sort-amount-down"
+    styleClass="btn--md btn--neutral"
+    [disabled]="showAdd"
+    (onClick)="showSort = !showSort"
+  />
+
+  <p-button
+    [label]="'portal.generic.button.refresh' | translate"
+    icon="pi pi-refresh"
+    styleClass="btn--md btn--primary"
+    [disabled]="status === 'loading' || showAdd"
+    (onClick)="carregar()"
+  />
+</div>
+
+@if (showAdd && branchCode) {
+  <app-branch-repository-add [branchCode]="branchCode" [linked]="repositories" (closed)="showAdd = false" (added)="onAdded()" />
+}
+
+@if (showFilter) {
+  <app-branch-repository-filter idPrefix="repository-filter" [filter]="filtro" (filterChange)="onFilterChange($event)" />
+}
+
+@if (showSort) {
+  <app-branch-repository-sort [sort]="ordenacao" (sortChange)="onSortChange($event)" />
+}
+
+@switch (status) {
+  @case ('loading') {
+    <div class="list-stack" aria-busy="true">
+      @for (s of skeletons; track $index) {
+        <app-branch-repository-card [loading]="true" />
+      }
+    </div>
+  }
+
+  @case ('error') {
+    <div class="load-state load-state--error state-fill">
+      <i class="pi pi-exclamation-circle"></i>
+      <p>{{ 'iclass.generic.label.could-not-load-repositories' | translate }}</p>
+      <p-button [label]="'portal.generic.button.try-again' | translate" icon="pi pi-refresh" styleClass="btn--md btn--secondary" (onClick)="carregar()" />
+    </div>
+  }
+
+  @default {
+    @if (resultado.length) {
+      <div class="list-stack">
+        @for (link of pagina; track key(link)) {
+          <app-branch-repository-card
+            [repository]="link"
+            [stockPartition]="link.almoxarifado"
+            [unlinkable]="true"
+            [actionsDisabled]="showAdd"
+            (unlink)="desvincular(link)"
+            (open)="abrir($event)"
+          />
+        }
+      </div>
+
+      @if (resultado.length > rows) {
+        <p-paginator
+          [first]="first"
+          [rows]="rows"
+          [totalRecords]="resultado.length"
+          [pageLinkSize]="5"
+          styleClass="paginator--md"
+          (onPageChange)="onPage($event)"
+        />
+      }
+    } @else if (repositories.length && filtroAtivo) {
+      <div class="req-empty state-fill">
+        <i class="pi pi-search"></i>
+        <p>{{ 'portal.generic.results-not-found' | translate }}</p>
+      </div>
+    } @else {
+      <div class="req-empty state-fill">
+        <i class="pi pi-folder-open"></i>
+        <p>{{ 'iclass.generic.label.no-repository-linked' | translate }}</p>
+      </div>
+    }
+  }
+}
+
+<!-- confirmação ao desvincular -->
+<p-confirmDialog styleClass="leave-dialog leave-dialog--titled" [style]="{ width: '420px' }" />

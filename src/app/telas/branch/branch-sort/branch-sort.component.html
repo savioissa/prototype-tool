@@ -1,0 +1,23 @@
+<section class="sort-panel">
+  <span class="sort-panel__label">{{ 'portal.generic.label.sort-by' | translate }}</span>
+  <div class="sort-panel__control">
+    <div class="sort-panel__field">
+      <p-dropdown
+        [options]="campos()"
+        [ngModel]="sort.campo"
+        (ngModelChange)="setCampo($event)"
+        [placeholder]="'portal.generic.label.select' | translate"
+        [showClear]="true"
+        appendTo="body"
+        styleClass="sort-panel__select"
+        panelStyleClass="sort-panel__select-panel"
+      />
+    </div>
+    <p-button
+      [icon]="sort.direcao === 'asc' ? 'pi pi-sort-amount-up-alt' : 'pi pi-sort-amount-down'"
+      styleClass="btn--md btn--neutral"
+      [disabled]="!sort.campo"
+      (onClick)="inverterDirecao()"
+    />
+  </div>
+</section>

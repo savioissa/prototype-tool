@@ -1,0 +1,13 @@
+<section>
+  @for (item of itens; track item) {
+    <div exFilhoAtributo>{{ item }}</div>
+  }
+  @defer {
+    <ex-filho-b />
+  } @placeholder {
+    <p>carregando</p>
+  }
+  <ng-container *ngIf="itens.length">
+    <ex-filho-a></ex-filho-a>
+  </ng-container>
+</section>

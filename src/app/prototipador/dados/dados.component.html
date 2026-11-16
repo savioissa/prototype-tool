@@ -1,0 +1,81 @@
+<header class="proto-dados__cabecalho">
+  <div>
+    <h1 class="proto-dados__titulo">Dados</h1>
+    <p class="proto-dados__resumo">
+      {{ schema.entidades.length }} entidades · {{ schema.relacionamentos.length }} relacionamentos ({{ confirmados }} confirmados pelos dados) ·
+      inferidos do código das telas
+    </p>
+  </div>
+  @if (schema.entidades.length) {
+    <div class="proto-dados__zoom" role="group" aria-label="Zoom">
+      <button type="button" class="proto-dados__botao" (click)="aproximar(1 / 1.2)" aria-label="Diminuir zoom">
+        <i class="pi pi-minus"></i>
+      </button>
+      <span class="proto-dados__porcentagem">{{ (zoom() * 100).toFixed(0) }}%</span>
+      <button type="button" class="proto-dados__botao" (click)="aproximar(1.2)" aria-label="Aumentar zoom">
+        <i class="pi pi-plus"></i>
+      </button>
+      <button type="button" class="proto-dados__botao proto-dados__botao--texto" (click)="ajustar()">
+        <i class="pi pi-expand"></i> Ajustar à tela
+      </button>
+    </div>
+  }
+</header>
+
+@if (schema.avisos.length) {
+  <section class="proto-dados__avisos">
+    <button type="button" class="proto-dados__avisos-titulo" (click)="avisosAbertos.set(!avisosAbertos())" [attr.aria-expanded]="avisosAbertos()">
+      <i class="pi" [class.pi-chevron-down]="avisosAbertos()" [class.pi-chevron-right]="!avisosAbertos()"></i>
+      Avisos ({{ schema.avisos.length }})
+    </button>
+    @if (avisosAbertos()) {
+      <ul class="proto-dados__avisos-lista">
+        @for (aviso of schema.avisos; track aviso) {
+          <li>{{ aviso }}</li>
+        }
+      </ul>
+    }
+  </section>
+}
+
+@if (!schema.entidades.length) {
+  <div class="proto-dados__estado">
+    <i class="pi pi-database"></i>
+    <p>Nenhum dado encontrado nas telas.</p>
+    <p class="proto-dados__dica">
+      O gerador procura os tipos que os serviços das telas devolvem e as constantes com dados fixos (listas de objetos).
+    </p>
+  </div>
+} @else {
+  <div
+    #janela
+    class="proto-dados__janela"
+    (wheel)="rolar($event)"
+    (pointerdown)="comecarArrasto($event)"
+    (pointermove)="arrastar($event)"
+    (pointerup)="terminarArrasto()"
+    (pointercancel)="terminarArrasto()"
+  >
+    <div
+      #desenho
+      class="proto-dados__desenho"
+      [style.transform]="'translate(' + deslocamento().x + 'px, ' + deslocamento().y + 'px) scale(' + zoom() + ')'"
+    ></div>
+
+    @if (carregando()) {
+      <p class="proto-dados__estado proto-dados__estado--sobre">Desenhando o diagrama…</p>
+    }
+    @if (erro()) {
+      <div class="proto-dados__estado proto-dados__estado--sobre">
+        <i class="pi pi-exclamation-circle"></i>
+        <p>Não foi possível desenhar o diagrama.</p>
+        <pre class="proto-dados__erro">{{ erro() }}</pre>
+      </div>
+    }
+
+    <p class="proto-dados__legenda">
+      <span><span class="proto-dados__traco"></span> linha contínua: relacionamento confirmado pelos dados</span>
+      <span><span class="proto-dados__traco proto-dados__traco--tracejado"></span> linha tracejada: relacionamento provável</span>
+    </p>
+  </div>
+}

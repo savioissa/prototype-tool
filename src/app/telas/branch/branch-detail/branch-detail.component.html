@@ -1,0 +1,36 @@
+<!-- breadcrumb no topo: "Lista" volta para a lista de filiais -->
+<p-breadcrumb
+  class="branch-breadcrumb"
+  styleClass="branch-breadcrumb__nav"
+  [model]="[
+    { label: 'portal.generic.label.list' | translate, routerLink: '/filial', routerLinkActiveOptions: { exact: true } },
+    { label: 'iclass.generic.label.branch-page' | translate }
+  ]"
+>
+  <ng-template pTemplate="separator">&gt;</ng-template>
+</p-breadcrumb>
+
+<!-- carregando ou pronto: cada componente mostra o próprio skeleton enquanto `loading` -->
+<app-branch-sidebar [branch]="branch" [loading]="status === 'loading'" />
+
+<section class="branch-main" [attr.aria-busy]="status === 'loading'">
+  <p-tabView styleClass="req-tabs branch-tabs" [(activeIndex)]="activeTab">
+    <p-tabPanel [header]="'portal.generic.label.register' | translate">
+      <app-branch-register [branch]="branch" [loading]="status === 'loading'" (saved)="onSaved($event)" />
+    </p-tabPanel>
+
+    <p-tabPanel [header]="'iclass.generic.label.stock-partition' | translate">
+      <!-- conteúdo lazy: só carrega os almoxarifados quando a aba é aberta (e mantém ao trocar de aba) -->
+      <ng-template pTemplate="content">
+        <app-branch-stock-partitions [branchCode]="branch?.codigo ?? null" />
+      </ng-template>
+    </p-tabPanel>
+
+    <p-tabPanel [header]="'iclass.generic.label.repository' | translate">
+      <!-- conteúdo lazy, como na aba Almoxarifado -->
+      <ng-template pTemplate="content">
+        <app-branch-repositories [branchCode]="branch?.codigo ?? null" />
+      </ng-template>
+    </p-tabPanel>
+  </p-tabView>
+</section>

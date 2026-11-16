@@ -1,0 +1,89 @@
+// Página da filial em grid de 10 colunas: resumo (app-branch-sidebar) em 2, abas em 8.
+// Os skeletons ficam em cada componente; aqui só o layout.
+:host {
+  display: grid;
+  grid-template-columns: repeat(10, minmax(0, 1fr));
+  // breadcrumb com a altura dele; o resto da tela fica para o conteúdo
+  grid-template-rows: auto 1fr;
+  align-items: start;
+  gap: 16px;
+  min-height: 100vh;
+  padding: 16px;
+  box-sizing: border-box;
+}
+
+// breadcrumb: linha inteira no topo, 12px; "Lista" no azul principal, item atual e separador em cinza
+.branch-breadcrumb {
+  grid-column: 1 / -1;
+}
+
+:host ::ng-deep .branch-breadcrumb__nav.p-breadcrumb {
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  font-size: 12px;
+  line-height: 18px;
+
+  .p-breadcrumb-list {
+    gap: 6px;
+  }
+
+  .p-menuitem-separator {
+    margin: 0;
+    color: #9CA3AF;
+  }
+
+  .p-menuitem-link {
+    padding: 0;
+    border-radius: 2px;
+  }
+
+  .p-menuitem-link .p-menuitem-text {
+    color: #3B82F6;
+  }
+
+  .p-menuitem-link:hover .p-menuitem-text {
+    text-decoration: underline;
+  }
+
+  // item atual: sem link
+  .p-menuitem:last-child .p-menuitem-link {
+    cursor: default;
+  }
+
+  .p-menuitem:last-child .p-menuitem-text {
+    color: #6B7280;
+    text-decoration: none;
+  }
+}
+
+// a linha do breadcrumb (18px + 16px de gap) sai da altura da lateral, para a página continuar cabendo na tela
+app-branch-sidebar {
+  grid-column: span 2;
+  height: calc(100vh - 32px - 34px);
+}
+
+.branch-main {
+  grid-column: span 8;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+// telas estreitas: resumo em cima, abas embaixo, os dois com a largura toda
+@media (max-width: 900px) {
+  // breadcrumb, resumo e abas em linhas; as abas ficam com o resto da tela
+  :host {
+    grid-template-rows: auto auto 1fr;
+  }
+
+  app-branch-sidebar,
+  .branch-main {
+    grid-column: 1 / -1;
+  }
+
+  app-branch-sidebar {
+    height: auto;
+  }
+}

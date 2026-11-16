@@ -1,0 +1,21 @@
+@if (estado.idInexistente(); as id) {
+  <div class="proto-palco__estado">
+    <i class="pi pi-question-circle"></i>
+    <p>O componente <code>{{ id }}</code> não existe mais na pasta das telas.</p>
+  </div>
+} @else if (!estado.selecionado()) {
+  <div class="proto-palco__estado">
+    <i class="pi pi-box"></i>
+    <p>Escolha um componente na lista.</p>
+  </div>
+} @else if (erro()) {
+  <div class="proto-palco__estado proto-palco__estado--erro">
+    <i class="pi pi-exclamation-circle"></i>
+    <p class="proto-palco__orientacao">Este componente precisa de um arquivo de ajuste.</p>
+    <pre class="proto-palco__mensagem">{{ erro() }}</pre>
+  </div>
+}
+
+<div class="proto-palco__conteiner" [style.width]="largura()" [hidden]="!estado.selecionado() || erro()">
+  <ng-container #ancora />
+</div>

@@ -1,0 +1,10 @@
+{
+  "pastaTelas": "telas",
+  "mocks": "telas/**/*.mock.ts",
+  "i18n": {
+    "pasta": "i18n",
+    "idiomas": { "pt": "pt.json", "en": "en.json", "es": "es.json" }
+  },
+  "traducao": { "pipe": "translate", "servico": "TranslateService" },
+  "planilha": { "arquivo": "tags.csv", "colunaChave": "Tag" }
+}

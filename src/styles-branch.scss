@@ -1,0 +1,131 @@
+// Estilos globais copiados do projeto branch (src/styles.scss). Os @import do PrimeNG foram retirados: a ferramenta já os carrega no angular.json.
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  font-family: var(--font-family);
+}
+
+/* ===== Layout de página (lista e cadastro) ===== */
+.page-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 32px;
+  background: #FAFAFA;
+  border-bottom: 1px solid #E2E8F0;
+
+  // `.page-header .page-header__title` para vencer o peso 600 do .t-title-lg (styles.css carrega depois)
+  & &__title {
+    margin: 0;
+    font-weight: 500;
+    color: #1F2937;
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: auto;
+  }
+}
+
+.page-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px 32px 24px;
+}
+
+@media (max-width: 700px) {
+  .page-header,
+  .page-content {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}
+
+/* ===== Modal de confirmação de saída (cadastro): sem título, só a mensagem e as ações ===== */
+.p-confirm-dialog.leave-dialog .p-dialog-header { display: none; }
+.p-confirm-dialog.leave-dialog .p-dialog-content { padding-top: 24px; border-top-left-radius: 6px; border-top-right-radius: 6px; }
+
+/* com título (desvínculo): o mesmo modal, mostrando o cabeçalho "Atenção" */
+.p-confirm-dialog.leave-dialog.leave-dialog--titled .p-dialog-header { display: flex; }
+.p-confirm-dialog.leave-dialog.leave-dialog--titled .p-dialog-title { font-size: 16px; line-height: 24px; font-weight: 600; color: #1F2937; }
+.p-confirm-dialog.leave-dialog.leave-dialog--titled .p-dialog-content { padding-top: 0; border-top-left-radius: 0; border-top-right-radius: 0; }
+
+/* ===== Listas de cards (filiais, almoxarifados) ===== */
+.list-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* skeleton do paginador durante o carregamento: um bloco só, no lugar do paginador */
+.skeleton.skeleton-paginator {
+  align-self: flex-end;
+  width: 300px;
+  max-width: 100%;
+  height: 32px;
+  margin: 4px 0;
+  border-radius: 16px;
+}
+
+/* estado vazio/erro que ocupa o espaço restante e fica centralizado */
+.state-fill { flex: 1; }
+.req-empty > .pi { font-size: 18px; }
+
+/* alerta de erro geral em formulários */
+.form-alert {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border: 1px solid #FECACA;
+  border-radius: 6px;
+  background: #FEF2F2;
+  color: #B91C1C;
+  font: var(--secondary-md);
+}
+
+/* ações à direita dos cards (desvincular, selecionar, abrir) */
+.card-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 2px;
+}
+
+.card-actions .p-button + .p-button,
+.card-actions p-button + p-button {
+  margin-left: 0;
+}
+
+/* "Selecionar" na escolha de almoxarifado e repositório: antes de "Abrir", afastado dele */
+.card-actions .p-button.card-actions__pick {
+  margin-right: 8px;
+}
+
+/* Ícone "desvincular" (corrente cortada): o PrimeIcons 7 não tem. Desenhado em SVG e aplicado como máscara,
+   então segue a cor do botão (currentColor) e o tamanho da fonte, igual aos .pi. Uso: icon="pi pi-link-slash" */
+.pi.pi-link-slash::before {
+  content: '';
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.125em;
+  background-color: currentColor;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 15l3-3m2-2l1-1'/%3E%3Cpath d='M11 6l.463-.536a5 5 0 0 1 7.071 7.072l-.534.464'/%3E%3Cpath d='M13 18l-.397.534a5.068 5.068 0 0 1-7.127 0a4.972 4.972 0 0 1 0-7.071l.524-.463'/%3E%3Cpath d='M3 3l18 18'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 15l3-3m2-2l1-1'/%3E%3Cpath d='M11 6l.463-.536a5 5 0 0 1 7.071 7.072l-.534.464'/%3E%3Cpath d='M13 18l-.397.534a5.068 5.068 0 0 1-7.127 0a4.972 4.972 0 0 1 0-7.071l.524-.463'/%3E%3Cpath d='M3 3l18 18'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+
+/* aviso de desvínculo bloqueado por insumos (mesmo modal de confirmação): título, texto e lista */
+.p-confirm-dialog.leave-dialog .p-confirm-dialog-message { display: block; }
+.p-confirm-dialog.leave-dialog .p-confirm-dialog-message p { margin: 6px 0 0; }
+.p-confirm-dialog.leave-dialog .p-confirm-dialog-message ul { margin: 8px 0 0; padding-left: 18px; }
+.p-confirm-dialog.leave-dialog .p-confirm-dialog-message li + li { margin-top: 2px; }

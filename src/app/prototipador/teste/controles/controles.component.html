@@ -1,0 +1,86 @@
+<header class="proto-controles__cabecalho">
+  <span class="proto-controles__titulo">Controles</span>
+  <button type="button" class="proto-controles__fechar" (click)="fechar.emit()" aria-label="Fechar controles">
+    <i class="pi pi-times"></i>
+  </button>
+</header>
+
+@if (estado.ajustesProntos() && estado.selecionado(); as componente) {
+  <section class="proto-controles__secao">
+    <button type="button" class="proto-controles__secao-titulo" (click)="alternarSecao('estado')" [attr.aria-expanded]="!secoesRecolhidas().has('estado')">
+      <i class="pi" [class.pi-chevron-down]="!secoesRecolhidas().has('estado')" [class.pi-chevron-right]="secoesRecolhidas().has('estado')"></i>
+      Estado
+      <span class="proto-controles__contagem-secao">{{ nomesDosEstados().length }}</span>
+    </button>
+    @if (!secoesRecolhidas().has('estado')) {
+      <div class="proto-controles__secao-corpo">
+        <div class="proto-controles__linha">
+          <p-dropdown
+            inputId="proto-estado"
+            styleClass="proto-controles__seletor"
+            appendTo="body"
+            [autoDisplayFirst]="false"
+            [options]="nomesDosEstados()"
+            [ngModel]="estado.estado().nome"
+            (ngModelChange)="estado.escolherEstado($event)"
+            ariaLabel="Estado"
+          />
+          <button type="button" class="proto-controles__restaurar" (click)="estado.restaurar()">
+            <i class="pi pi-replay"></i> Restaurar
+          </button>
+        </div>
+        @if (estado.estado().descricao; as descricao) {
+          <p class="proto-controles__descricao">{{ descricao }}</p>
+        }
+        @if (nomesDosEstados().length === 1 && !estado.ajuste()) {
+          <p class="proto-controles__dica">Sem arquivo de ajuste: só o estado Padrão, sem nenhum input definido.</p>
+        }
+      </div>
+    }
+  </section>
+
+  <section class="proto-controles__secao">
+    <button type="button" class="proto-controles__secao-titulo" (click)="alternarSecao('inputs')" [attr.aria-expanded]="!secoesRecolhidas().has('inputs')">
+      <i class="pi" [class.pi-chevron-down]="!secoesRecolhidas().has('inputs')" [class.pi-chevron-right]="secoesRecolhidas().has('inputs')"></i>
+      Inputs
+      <span class="proto-controles__contagem-secao">{{ componente.inputs.length }}</span>
+    </button>
+    @if (!secoesRecolhidas().has('inputs')) {
+      <div class="proto-controles__secao-corpo proto-controles__campos">
+        @for (input of componente.inputs; track input.nome) {
+          <proto-campo
+            [definicao]="definicao(input)"
+            [valor]="valorDe(input)"
+            [caminho]="input.nome"
+            [marcador]="marcadorDe(input)"
+            [limites]="estado.ajuste()?.limites ?? {}"
+            [tipos]="estado.ajuste()?.tipos ?? {}"
+            (alterar)="estado.editar(input.nome, $event)"
+          />
+        } @empty {
+          <p class="proto-controles__dica">Este componente não tem inputs.</p>
+        }
+      </div>
+    }
+  </section>
+
+  <section class="proto-controles__secao">
+    <div class="proto-controles__secao-titulo-linha">
+      <button type="button" class="proto-controles__secao-titulo" (click)="alternarSecao('eventos')" [attr.aria-expanded]="!secoesRecolhidas().has('eventos')">
+        <i class="pi" [class.pi-chevron-down]="!secoesRecolhidas().has('eventos')" [class.pi-chevron-right]="secoesRecolhidas().has('eventos')"></i>
+        Eventos emitidos
+        <span class="proto-controles__contagem-secao">{{ estado.eventos().length }}</span>
+      </button>
+      @if (estado.eventos().length && !secoesRecolhidas().has('eventos')) {
+        <button type="button" class="proto-controles__acao" (click)="estado.limparEventos()">Limpar</button>
+      }
+    </div>
+    @if (!secoesRecolhidas().has('eventos')) {
+      <div class="proto-controles__secao-corpo">
+        <proto-teste-eventos />
+      </div>
+    }
+  </section>
+} @else {
+  <p class="proto-controles__dica proto-controles__dica--solta">Escolha um componente na árvore.</p>
+}

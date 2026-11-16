@@ -1,0 +1,8 @@
+{
+  "tela": { "titulo": "Título", "ola": "Olá, {{nome}}" },
+  "acao": { "salvar": "Salvar", "cancelar": "Cancelar", "fechar": "Fechar" },
+  "campo": { "nome": "Nome", "dica": "Digite o nome" },
+  "link": { "ajuda": "Ajuda" },
+  "codigo.provavel": "Código",
+  "lista": { "vazia": "Vazia", "cheia": "Cheia", "nada": "Nada", "semopcoes": "Sem opções" }
+}
