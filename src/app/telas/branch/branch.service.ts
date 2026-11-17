@@ -157,6 +157,13 @@ export class SuppliesPendingError extends Error {
   }
 }
 
+/** Desvínculo do almoxarifado recusado porque algum repositório da filial ainda está vinculado a ele. */
+export class RepositoryLinkedError extends Error {
+  constructor() {
+    super('Almoxarifado vinculado a repositório: remova o vínculo antes de desvincular');
+  }
+}
+
 /** Aviso de vínculo alterado numa aba: a outra aba da mesma filial recarrega para não ficar desatualizada. */
 export interface LinkChange {
   filial: string;
@@ -238,9 +245,9 @@ export class BranchService {
     return of(undefined).pipe(delay(600), tap(() => this.avisar(codigoFilial, 'almoxarifado')));
   }
 
-  /** Repositórios da filial que ainda têm insumos no almoxarifado: enquanto houver, não dá para desvinculá-lo. */
-  insumosNoAlmoxarifado(codigoFilial: string, codigo: string): Observable<SupplyHolder[]> {
-    return of(this.pendencias(codigoFilial, (link) => link.almoxarifado === codigo)).pipe(delay(400));
+  /** Se algum repositório da filial está vinculado ao almoxarifado: enquanto estiver, não dá para desvinculá-lo. */
+  temRepositorioNoAlmoxarifado(codigoFilial: string, codigo: string): Observable<boolean> {
+    return of(this.temRepositorio(codigoFilial, codigo)).pipe(delay(400));
   }
 
   /** Insumos do repositório no almoxarifado do par: enquanto houver, não dá para desvincular o par. */
@@ -249,16 +256,13 @@ export class BranchService {
     return of(this.pendencias(codigoFilial, (link) => linkKey(link) === chave)).pipe(delay(400));
   }
 
-  /**
-   * Desvincula o almoxarifado da filial; os pares com ele saem também.
-   * Recusa (SuppliesPendingError) se algum repositório ainda tiver insumos nele.
-   */
+  /** Desvincula o almoxarifado da filial. Recusa (RepositoryLinkedError) se algum repositório da filial estiver vinculado a ele. */
   desvincularAlmoxarifado(codigoFilial: string, codigo: string): Observable<void> {
-    const pendentes = this.pendencias(codigoFilial, (link) => link.almoxarifado === codigo);
-    if (pendentes.length) return this.recusar(pendentes);
+    if (this.temRepositorio(codigoFilial, codigo)) {
+      return timer(600).pipe(switchMap(() => throwError(() => new RepositoryLinkedError())));
+    }
 
     this.warehouses[codigoFilial] = (this.warehouses[codigoFilial] ?? []).filter((w) => w.codigo !== codigo);
-    this.repositories[codigoFilial] = (this.repositories[codigoFilial] ?? []).filter((l) => l.almoxarifado !== codigo);
     return of(undefined).pipe(delay(600), tap(() => this.avisar(codigoFilial, 'almoxarifado')));
   }
 
@@ -308,6 +312,10 @@ export class BranchService {
 
     this.repositories[codigoFilial] = (this.repositories[codigoFilial] ?? []).filter((l) => linkKey(l) !== chave);
     return of(undefined).pipe(delay(600), tap(() => this.avisar(codigoFilial, 'repositorio')));
+  }
+
+  private temRepositorio(codigoFilial: string, codigo: string): boolean {
+    return (this.repositories[codigoFilial] ?? []).some((link) => link.almoxarifado === codigo);
   }
 
   /** Pares da filial com insumo > 0 que passam no filtro. */

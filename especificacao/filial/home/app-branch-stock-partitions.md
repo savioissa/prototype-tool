@@ -78,7 +78,7 @@ filtro, ordenação e paginação, e permite vincular novos almoxarifados e desv
 - **Regras:** ao abrir, o foco fica em "Cancelar".
 
 #### Avisos de desvínculo
-- **Tag:** sucesso `iclass.generic.label.stock-partition-unlinked-successfully`; bloqueio `iclass.generic.label.cannot-unlink-stock-partition-supplies-pending`; erro `iclass.generic.label.could-not-unlink-stock-partition`.
+- **Tag:** sucesso `iclass.generic.label.stock-partition-unlinked-successfully`; bloqueio `iclass.generic.label.cannot-unlink-stock-partition-repository-linked`; erro `iclass.generic.label.could-not-unlink-stock-partition`.
 - **Componente:** `p-toast`
 - **Regras:** sucesso por 4 segundos; bloqueio (gravidade aviso) e erro por 6 segundos.
 
@@ -103,13 +103,13 @@ Uma coluna com 12px entre os blocos e altura mínima da área da aba:
 
 ### Comportamentos
 - **Dado** a lista carregada, **quando** o usuário clica em "Desvincular" num card, **então** a
-  aba consulta se algum repositório da filial ainda tem insumos nesse almoxarifado: se tiver,
-  mostra o toast de bloqueio e não desvincula; se não tiver, abre o diálogo de desvínculo. Um
+  aba consulta se algum repositório da filial está vinculado a esse almoxarifado (na aba
+  Repositório): se estiver, mostra o toast de bloqueio e não desvincula; se não estiver, abre o
+  diálogo de desvínculo. Um
   segundo clique durante a consulta é ignorado.
 - **Dado** o diálogo de desvínculo, **quando** o usuário confirma, **então** o almoxarifado é
-  desvinculado junto com todos os pares (almoxarifado + repositório) que o usam, aparece o toast
-  de sucesso e a lista recarrega. Se insumos entraram entre a consulta e a confirmação, aparece o
-  toast de bloqueio; outra falha, o toast de erro.
+  desvinculado, aparece o toast de sucesso e a lista recarrega. Se um repositório foi vinculado a
+  ele entre a consulta e a confirmação, aparece o toast de bloqueio; outra falha, o toast de erro.
 
 ### CSS
 | Classe                  | Definição                                                                          |

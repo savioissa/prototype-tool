@@ -9,7 +9,7 @@
   "iclass.generic.label.branch-created-successfully": "Sucursal creada con éxito",
   "iclass.generic.label.branch-page": "Página de la sucursal",
   "iclass.generic.label.cannot-unlink-repository-supplies-pending": "No es posible desvincular el repositorio, ya que todavía hay insumos en la partición de stock. Mueva los insumos antes de desvincular.",
-  "iclass.generic.label.cannot-unlink-stock-partition-supplies-pending": "No es posible desvincular la partición de stock, ya que todavía hay insumos en los repositorios vinculados a ella. Mueva los insumos antes de desvincular.",
+  "iclass.generic.label.cannot-unlink-stock-partition-repository-linked": "Esta partición de stock está vinculada a un repositorio en esta sucursal. Para desvincularla, elimine primero el vínculo en el repositorio.",
   "iclass.generic.label.cluster": "Cluster",
   "iclass.generic.label.cluster-name": "Nombre del clúster",
   "iclass.generic.label.cluster-regional": "Regional del clúster",

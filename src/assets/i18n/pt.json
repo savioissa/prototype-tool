@@ -9,7 +9,7 @@
   "iclass.generic.label.branch-created-successfully": "Filial criada com sucesso",
   "iclass.generic.label.branch-page": "Página da Filial",
   "iclass.generic.label.cannot-unlink-repository-supplies-pending": "Não é possível desvincular o repositório, pois ainda há insumos no almoxarifado. Movimente os insumos antes de desvincular.",
-  "iclass.generic.label.cannot-unlink-stock-partition-supplies-pending": "Não é possível desvincular o almoxarifado, pois ainda há insumos nos repositórios vinculados a ele. Movimente os insumos antes de desvincular.",
+  "iclass.generic.label.cannot-unlink-stock-partition-repository-linked": "Este almoxarifado está vinculado a um repositório nesta filial. Para desvinculá-lo, remova primeiro o vínculo no repositório.",
   "iclass.generic.label.cluster": "Cluster",
   "iclass.generic.label.cluster-name": "Nome do cluster",
   "iclass.generic.label.cluster-regional": "Regional do cluster",

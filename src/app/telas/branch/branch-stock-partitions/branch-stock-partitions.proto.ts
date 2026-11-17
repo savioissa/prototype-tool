@@ -28,6 +28,11 @@ export default ajustar(BranchStockPartitionsComponent, {
         aba.carregar();
       },
     },
+    'Desvínculo bloqueado': {
+      descricao: 'O usuário tenta desvincular o almoxarifado Central, que tem repositórios vinculados na filial MTZ.',
+      inputs: { branchCode: 'MTZ' },
+      acao: (aba) => aba.desvincular({ codigo: 'Central', descricao: 'Almoxarifado central' }),
+    },
     'Erro ao carregar': {
       inputs: { branchCode: 'MTZ' },
       provedores: [simularServico(BranchService, { listarAlmoxarifados: () => falhar() })],

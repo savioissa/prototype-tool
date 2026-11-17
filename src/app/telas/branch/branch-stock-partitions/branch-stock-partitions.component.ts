@@ -9,7 +9,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { BranchFilterComponent } from '../branch-filter/branch-filter.component';
 import { BranchSortComponent } from '../branch-sort/branch-sort.component';
 import { BranchFilter, SortState, Warehouse, emptyFilter } from '../branch.model';
-import { BranchService, SuppliesPendingError } from '../branch.service';
+import { BranchService, RepositoryLinkedError } from '../branch.service';
 import { filterAndSort, hasActiveFilter } from '../filter-sort';
 import { BranchStockPartitionCardComponent } from '../branch-stock-partition-card/branch-stock-partition-card.component';
 import { BranchStockPartitionLinkComponent } from '../branch-stock-partition-link/branch-stock-partition-link.component';
@@ -61,7 +61,7 @@ export class BranchStockPartitionsComponent implements OnChanges {
   showFilter = false;
   showSort = false;
   showLink = false;
-  /** Consultando insumos antes de desvincular (evita clique duplo). */
+  /** Consultando vínculos com repositórios antes de desvincular (evita clique duplo). */
   verificando = false;
 
   /** Filtro em edição no painel. */
@@ -136,7 +136,7 @@ export class BranchStockPartitionsComponent implements OnChanges {
   }
 
   /**
-   * Desvincula o almoxarifado da filial. Se algum repositório da filial ainda tiver insumos nele, avisa num
+   * Desvincula o almoxarifado da filial. Se algum repositório da filial estiver vinculado a ele, avisa num
    * toast que não dá para desvincular; senão pede confirmação.
    */
   desvincular(stockPartition: Warehouse): void {
@@ -144,11 +144,11 @@ export class BranchStockPartitionsComponent implements OnChanges {
     const filial = this.branchCode;
     this.verificando = true;
 
-    this.service.insumosNoAlmoxarifado(filial, stockPartition.codigo).subscribe({
-      next: (pendentes) => {
+    this.service.temRepositorioNoAlmoxarifado(filial, stockPartition.codigo).subscribe({
+      next: (vinculado) => {
         this.verificando = false;
-        if (pendentes.length) {
-          this.avisarInsumos();
+        if (vinculado) {
+          this.avisarRepositorio();
           return;
         }
         this.confirmarDesvinculo(filial, stockPartition);
@@ -177,17 +177,17 @@ export class BranchStockPartitionsComponent implements OnChanges {
             this.messages.add({ severity: 'success', summary: this.translate.instant('iclass.generic.label.stock-partition-unlinked-successfully'), life: 4000 });
             this.carregar();
           },
-          // insumos entraram entre a verificação e a confirmação: o serviço recusa e o aviso aparece
-          error: (err: unknown) => (err instanceof SuppliesPendingError ? this.avisarInsumos() : this.erroDesvincular())
+          // repositório vinculado entre a verificação e a confirmação: o serviço recusa e o aviso aparece
+          error: (err: unknown) => (err instanceof RepositoryLinkedError ? this.avisarRepositorio() : this.erroDesvincular())
         })
     });
   }
 
-  /** Desvínculo bloqueado: algum repositório da filial ainda tem insumos no almoxarifado. */
-  private avisarInsumos(): void {
+  /** Desvínculo bloqueado: algum repositório da filial está vinculado ao almoxarifado. */
+  private avisarRepositorio(): void {
     this.messages.add({
       severity: 'warn',
-      summary: this.translate.instant('iclass.generic.label.cannot-unlink-stock-partition-supplies-pending'),
+      summary: this.translate.instant('iclass.generic.label.cannot-unlink-stock-partition-repository-linked'),
       life: 6000
     });
   }

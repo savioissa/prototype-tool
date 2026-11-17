@@ -9,7 +9,7 @@
   "iclass.generic.label.branch-created-successfully": "Branch created successfully",
   "iclass.generic.label.branch-page": "Branch page",
   "iclass.generic.label.cannot-unlink-repository-supplies-pending": "Cannot unlink the repository because there are still supplies in the stock partition. Move the supplies before unlinking.",
-  "iclass.generic.label.cannot-unlink-stock-partition-supplies-pending": "Cannot unlink the stock partition because there are still supplies in the repositories linked to it. Move the supplies before unlinking.",
+  "iclass.generic.label.cannot-unlink-stock-partition-repository-linked": "This stock partition is linked to a repository in this branch. To unlink it, first remove the link in the repository.",
   "iclass.generic.label.cluster": "Cluster",
   "iclass.generic.label.cluster-name": "Cluster name",
   "iclass.generic.label.cluster-regional": "Cluster regional",

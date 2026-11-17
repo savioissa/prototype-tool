@@ -4,8 +4,8 @@
 | Entidade     | Papel      | Tag                                    | Tradução EN                  |
 | ------------ | ---------- | -------------------------------------- | ---------------------------- |
 | Filial       | Principal  | `branch`                               | Branch                       |
-| Almoxarifado | Secundária | `iclass.generic.label.stock-partition` | Stock partition (revisar)    |
-| Repositório  | Secundária | `iclass.generic.label.repository`      | Repository (revisar)         |
+| Almoxarifado | Secundária | `iclass.generic.label.stock-partition` | Stock partition              |
+| Repositório  | Secundária | `iclass.generic.label.repository`      | Repository                   |
 
 ### Glossário
 | Termo                 | Significado                                                                                                                                       |
@@ -15,7 +15,7 @@
 | Repositório           | Quem guarda insumos dentro de um almoxarifado. Tem um tipo: Equipe, Credenciada, Armazém, Oficina ou Cluster.                                      |
 | Tipo de repositório   | Equipe (técnico, identificado por login), Credenciada (empresa terceira), Armazém, Oficina (pertence a uma credenciada) e Cluster (pertence a uma regional). Cada tipo é identificado por dois campos (ver `home/app-branch-repository-card.md`). |
 | Vínculo               | Par almoxarifado + repositório vinculado a uma filial. O mesmo repositório pode ter um vínculo por almoxarifado.                                    |
-| Insumo                | Material guardado por um repositório num almoxarifado. Enquanto houver insumo, o vínculo (ou o almoxarifado) não pode ser desvinculado.            |
+| Insumo                | Material guardado por um repositório num almoxarifado. Enquanto houver insumo, o vínculo não pode ser desvinculado.                                 |
 | Lista                 | Página que lista as filiais cadastradas, com filtro, ordenação e paginação (`/filial`).                                                            |
 | Criação               | Página de cadastro de uma nova filial (`/filial/nova`).                                                                                           |
 | Home                  | Página de uma filial, aberta a partir da lista, com as abas Cadastro, Almoxarifado e Repositório (`/filial/:codigo`).                              |
