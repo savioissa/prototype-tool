@@ -40,6 +40,8 @@ qualquer tarefa e siga `06-plano-de-construcao.md` fase a fase.
 | `npm start` | Gera os arquivos, sobe o gerador em modo observação e o `ng serve` |
 | `npm run proto:gerar` | Roda o gerador uma vez |
 | `npm run proto:observar` | Roda o gerador a cada alteração nas telas |
+| `npm run proto:planilha` | Copia a planilha de tags de `planilha.origem` para `planilha.arquivo` |
+| `npm run plugin:empacotar` | Atualiza os pacotes do plugin `iclass-prototipacao` (ver `plugin/LEIA-ME.md`) |
 
 ## Onde fica cada coisa
 

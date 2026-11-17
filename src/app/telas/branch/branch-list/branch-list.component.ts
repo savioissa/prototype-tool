@@ -8,7 +8,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { BranchCardComponent } from '../branch-card/branch-card.component';
 import { BranchFilterComponent } from '../branch-filter/branch-filter.component';
 import { BranchSortComponent } from '../branch-sort/branch-sort.component';
-import { Branch, BranchFilter, SortState, emptyFilter, emptySort } from '../branch.model';
+import { Branch, BranchFilter, SortState, emptyFilter } from '../branch.model';
 import { BranchService } from '../branch.service';
 import { filterAndSort, hasActiveFilter } from '../filter-sort';
 
@@ -44,7 +44,8 @@ export class BranchListComponent implements OnInit {
   filtro: BranchFilter = emptyFilter();
   /** Filtro em vigor: o do painel só passa a valer quando o usuário clica em Atualizar. */
   filtroAplicado: BranchFilter = emptyFilter();
-  ordenacao: SortState = emptySort();
+  /** Ordenação padrão da lista de filiais: Descrição, crescente. */
+  ordenacao: SortState = { campo: 'descricao', direcao: 'asc' };
 
   get pagina(): Branch[] {
     return this.resultado.slice(this.first, this.first + this.rows);

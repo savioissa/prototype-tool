@@ -3,11 +3,19 @@
   "mocks": "src/app/telas/**/*.mock.ts",
   "i18n": {
     "pasta": "src/assets/i18n",
-    "idiomas": { "pt": "pt.json", "en": "en.json", "es": "es.json" }
+    "idiomas": {
+      "pt": "pt.json",
+      "en": "en.json",
+      "es": "es.json"
+    }
   },
-  "traducao": { "pipe": "translate", "servico": "TranslateService" },
+  "traducao": {
+    "pipe": "translate",
+    "servico": "TranslateService"
+  },
   "planilha": {
     "arquivo": "src/app/prototipador/entrada/tags.csv",
-    "colunaChave": "Tag"
+    "colunaChave": "Tag",
+    "origem": "C:\\Users\\Usuario\\Desktop\\Trabalho\\Planilha I18N - Página1.csv"
   }
 }

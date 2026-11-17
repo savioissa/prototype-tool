@@ -19,6 +19,8 @@ const rotasDasTelas: Routes = [
     path: 'filial/:codigo',
     loadComponent: () =>
       import('./telas/branch/branch-detail/branch-detail.component').then((m) => m.BranchDetailComponent),
+    // com o Cadastro em edição, sair da home (breadcrumb, voltar do navegador) pede confirmação
+    canDeactivate: [(pagina: { podeSair?: () => Promise<boolean> | boolean } | null) => pagina?.podeSair?.() ?? true],
   },
 ];
 

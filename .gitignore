@@ -43,3 +43,6 @@ Thumbs.db
 
 # Prototipador: saída do gerador
 /src/app/prototipador/gerado/
+
+# Plugin: dependências instaladas por engano na fonte do esqueleto
+/plugin/esqueleto/node_modules/

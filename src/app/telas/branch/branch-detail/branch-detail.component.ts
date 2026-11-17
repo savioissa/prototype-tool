@@ -1,9 +1,9 @@
-import { Component, DestroyRef, OnInit, inject } from '@angular/core';
+import { Component, DestroyRef, OnInit, ViewChild, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { BreadcrumbModule } from 'primeng/breadcrumb';
-import { TabViewModule } from 'primeng/tabview';
+import { TabView, TabViewModule } from 'primeng/tabview';
 import { filter, map, of, switchMap, tap } from 'rxjs';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
@@ -23,6 +23,7 @@ type LoadStatus = 'loading' | 'ready';
  * Aba Cadastro: app-branch-register (leitura e edição do cadastro); ao gravar, a lateral e a URL acompanham.
  * Aba Almoxarifado: almoxarifados vinculados (carregada só quando a aba é aberta).
  * Aba Repositório: repositórios vinculados, com os almoxarifados da filial associados (também lazy).
+ * Com o Cadastro em edição, trocar de aba ou sair da página (rota com o guard `podeSair`) pede confirmação.
  */
 @Component({
   selector: 'app-branch-detail',
@@ -52,6 +53,40 @@ export class BranchDetailComponent implements OnInit {
   status: LoadStatus = 'loading';
   branch: Branch | null = null;
   activeTab = 0;
+
+  @ViewChild(BranchRegisterComponent) private register?: BranchRegisterComponent;
+  @ViewChild(TabView) private tabView?: TabView;
+
+  /** Usado pelo guard da rota: em edição no Cadastro, só sai depois de confirmar. */
+  podeSair(): Promise<boolean> | boolean {
+    return this.register?.confirmarSaida() ?? true;
+  }
+
+  /**
+   * O usuário clicou numa aba. Saindo do Cadastro em edição, a aba volta para o Cadastro e o diálogo de saída
+   * aparece; "Sair" descarta a edição e abre a aba escolhida.
+   */
+  onTabChange(index: number): void {
+    if (this.activeTab !== 0 || !this.register?.editing) {
+      this.activeTab = index;
+      return;
+    }
+
+    this.voltarAba();
+    this.register.confirmarSaida().then((pode) => {
+      if (pode) this.activeTab = index;
+    });
+  }
+
+  /**
+   * Desfaz a troca de aba que o p-tabView já fez. A primeira atribuição só consome a trava interna que ele
+   * liga ao emitir a troca; a segunda reseleciona a aba atual.
+   */
+  private voltarAba(): void {
+    if (!this.tabView) return;
+    this.tabView.activeIndex = this.activeTab;
+    this.tabView.activeIndex = this.activeTab;
+  }
 
   ngOnInit(): void {
     // link direto para uma aba: /filial/PRO?aba=almoxarifado ou ?aba=repositorio

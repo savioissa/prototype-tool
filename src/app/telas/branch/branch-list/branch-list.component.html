@@ -2,7 +2,7 @@
   <h1 class="t-title-lg page-header__title">{{ 'branch' | translate }}</h1>
 
   <div class="page-header__actions">
-    <p-button [label]="'portal-iam.userlist.button.new' | translate" icon="pi pi-plus" styleClass="btn--md btn--secondary header-btn" (onClick)="novo()" />
+    <p-button [label]="'portal.generic.label.new' | translate" icon="pi pi-plus" styleClass="btn--md btn--secondary header-btn" (onClick)="novo()" />
 
     <p-button
       [class.is-active]="showFilter"
@@ -63,14 +63,16 @@
           }
         </div>
 
-        <p-paginator
-          [first]="first"
-          [rows]="rows"
-          [totalRecords]="resultado.length"
-          [pageLinkSize]="5"
-          styleClass="paginator--md"
-          (onPageChange)="onPage($event)"
-        />
+        @if (resultado.length > rows) {
+          <p-paginator
+            [first]="first"
+            [rows]="rows"
+            [totalRecords]="resultado.length"
+            [pageLinkSize]="5"
+            styleClass="paginator--md"
+            (onPageChange)="onPage($event)"
+          />
+        }
       } @else if (branches.length && filtroAtivo) {
         <div class="req-empty state-fill">
           <i class="pi pi-search"></i>

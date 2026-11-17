@@ -37,8 +37,8 @@ export interface SortState {
 
 export function emptyFilter(): BranchFilter {
   return {
-    codigo: { operador: 'igual', valor: '' },
-    descricao: { operador: null, valor: '' }
+    codigo: { operador: 'contem', valor: '' },
+    descricao: { operador: 'contem', valor: '' }
   };
 }
 
@@ -188,10 +188,10 @@ export function repositoryTypeTag(tipo: RepositoryType): string {
 
 export function emptyRepositoryFilter(): RepositoryFilter {
   const par = (): RepositoryTypeFilter => ({
-    codigo: { operador: 'igual', valor: '' },
-    nome: { operador: null, valor: '' },
-    credenciada: { operador: null, valor: '' },
-    regional: { operador: null, valor: '' }
+    codigo: { operador: 'contem', valor: '' },
+    nome: { operador: 'contem', valor: '' },
+    credenciada: { operador: 'contem', valor: '' },
+    regional: { operador: 'contem', valor: '' }
   });
   return {
     tipos: [],

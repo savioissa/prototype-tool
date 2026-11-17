@@ -14,7 +14,8 @@
 <app-branch-sidebar [branch]="branch" [loading]="status === 'loading'" />
 
 <section class="branch-main" [attr.aria-busy]="status === 'loading'">
-  <p-tabView styleClass="req-tabs branch-tabs" [(activeIndex)]="activeTab">
+  <!-- troca de aba passa por onTabChange: em edição no Cadastro, pede confirmação antes de sair -->
+  <p-tabView styleClass="req-tabs" [activeIndex]="activeTab" (activeIndexChange)="onTabChange($event)">
     <p-tabPanel [header]="'portal.generic.label.register' | translate">
       <app-branch-register [branch]="branch" [loading]="status === 'loading'" (saved)="onSaved($event)" />
     </p-tabPanel>

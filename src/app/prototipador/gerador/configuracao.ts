@@ -10,7 +10,11 @@ export interface Configuracao {
     idiomas: Record<string, string>;
   };
   traducao: { pipe: string; servico: string };
-  planilha: { arquivo: string; colunaChave: string };
+  /**
+   * `arquivo`: o CSV que o gerador lê. `origem` (opcional): caminho absoluto da planilha exportada
+   * na máquina de quem prototipa; `npm run proto:planilha` copia de `origem` para `arquivo`.
+   */
+  planilha: { arquivo: string; colunaChave: string; origem?: string };
 }
 
 export const ARQUIVO_CONFIGURACAO = 'prototipador.config.json';

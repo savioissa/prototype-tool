@@ -5,13 +5,15 @@
     "ng": "ng",
     "proto:gerar": "tsx src/app/prototipador/gerador/main.ts",
     "proto:observar": "tsx src/app/prototipador/gerador/main.ts --observar",
+    "proto:planilha": "tsx src/app/prototipador/gerador/atualizar-planilha.ts",
     "proto:testar": "tsx --test src/app/prototipador/gerador/testes/*.test.ts",
-    "prestart": "npm run proto:gerar",
+    "prestart": "npm run proto:planilha && npm run proto:gerar",
     "start": "concurrently -k -n gerador,angular \"npm:proto:observar\" \"ng serve\"",
-    "prebuild": "npm run proto:gerar",
+    "prebuild": "npm run proto:planilha && npm run proto:gerar",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "plugin:empacotar": "node plugin/empacotar.mjs"
   },
   "private": true,
   "dependencies": {

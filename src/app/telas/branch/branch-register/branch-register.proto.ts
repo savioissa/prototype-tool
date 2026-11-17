@@ -14,6 +14,16 @@ export default ajustar(BranchRegisterComponent, {
       inputs: { branch: MATRIZ },
       acao: (cadastro) => cadastro.editar(),
     },
+    'Cancelar com alterações': {
+      descricao: 'O usuário alterou a descrição e clicou em Cancelar: confirmação genérica antes de descartar.',
+      inputs: { branch: MATRIZ },
+      acao: (cadastro) => {
+        cadastro.editar();
+        cadastro.form.controls.descricao.setValue('Matriz alterada');
+        cadastro.form.markAsDirty();
+        cadastro.cancelar();
+      },
+    },
     'Código já existe': {
       descricao: 'O usuário trocou o código para um que já existe (SPO) e salvou.',
       inputs: { branch: MATRIZ },
@@ -24,7 +34,7 @@ export default ajustar(BranchRegisterComponent, {
       },
     },
     'Erro ao salvar': {
-      descricao: 'O serviço responde com erro ao salvar.',
+      descricao: 'O serviço responde com erro ao salvar: toast de erro e a edição continua.',
       inputs: { branch: MATRIZ },
       provedores: [simularServico(BranchService, { atualizar: () => falhar() })],
       acao: (cadastro) => {

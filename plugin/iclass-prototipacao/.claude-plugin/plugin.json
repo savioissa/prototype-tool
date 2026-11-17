@@ -1,0 +1,6 @@
+{
+  "name": "iclass-prototipacao",
+  "version": "0.1.0",
+  "description": "Monta projetos de protótipo IClass: Angular 17 + PrimeNG + ngx-translate e o prototipador (moldura, área de teste, dados e traduções).",
+  "author": { "name": "Sávio Barbosa" }
+}

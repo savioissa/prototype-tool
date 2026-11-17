@@ -1,0 +1,12 @@
+{
+  "name": "iclass",
+  "owner": { "name": "IClass · Design" },
+  "plugins": [
+    {
+      "name": "iclass-prototipacao",
+      "source": "./iclass-prototipacao",
+      "description": "Monta projetos de protótipo IClass: Angular 17 + PrimeNG + ngx-translate e o prototipador.",
+      "version": "0.1.0"
+    }
+  ]
+}
